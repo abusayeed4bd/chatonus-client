@@ -1,19 +1,20 @@
 
+import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
-import { createContext, useEffect, useRef, useState } from 'react';
 
 const SocketContext = createContext();
 
-const socket = io('http://localhost:5000')
+
+const socket = io('https://chatonus.herokuapp.com/')
 
 const ContextProvider = ({ children }) => {
-    const [stream, setStream] = useState(null);
-    const [me, setMe] = useState('');
-    const [call, setCall] = useState({});
     const [callAccepted, setCallAccepted] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
+    const [stream, setStream] = useState();
     const [name, setName] = useState('');
+    const [call, setCall] = useState({});
+    const [me, setMe] = useState('');
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -26,12 +27,13 @@ const ContextProvider = ({ children }) => {
 
                 myVideo.current.srcObject = currentStream;
             });
+
         socket.on('me', (id) => setMe(id));
 
         socket.on('callUser', ({ from, name: callerName, signal }) => {
             setCall({ isReceivingCall: true, from, name: callerName, signal });
         });
-    }, [])
+    }, []);
 
 
     const answerCall = () => {
@@ -50,7 +52,7 @@ const ContextProvider = ({ children }) => {
         peer.signal(call.signal);
 
         connectionRef.current = peer;
-    }
+    };
 
     const callUser = (id) => {
         const peer = new Peer({ initiator: true, trickle: false, stream });
@@ -70,7 +72,7 @@ const ContextProvider = ({ children }) => {
         });
 
         connectionRef.current = peer;
-    }
+    };
 
     const leaveCall = () => {
         setCallEnded(true);
@@ -78,7 +80,7 @@ const ContextProvider = ({ children }) => {
         connectionRef.current.destroy();
 
         window.location.reload();
-    }
+    };
 
     return (
         <SocketContext.Provider value={{

@@ -1,19 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import ReactDOM from 'react-dom';
+
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { ContextProvider } from './components/SocketContext';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <ContextProvider>
+import './index.css';
 
-      <App />
-    </ContextProvider>
-  </React.StrictMode>
+ReactDOM.render(
+  <ContextProvider>
+    <App />
+  </ContextProvider>,
+  document.getElementById('root'),
 );
-
-
-reportWebVitals();
