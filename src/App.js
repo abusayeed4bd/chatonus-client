@@ -5,10 +5,13 @@ import Home from './Home';
 
 
 
+
 function App() {
 
   return (
-    <Home></Home>
+    <div>
+      <Home></Home>
+    </div>
   );
 }
 
